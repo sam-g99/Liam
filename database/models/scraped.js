@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
-const userSchema = new mongoose.Schema({
+
+const scrapedSchema = new mongoose.Schema({
   user: {
     type: String,
     unique: true,
   },
 });
-const User = mongoose.model('User', userSchema);
-export default User;
+const Scraped = mongoose.model('Scraped', scrapedSchema);
+export default Scraped;
