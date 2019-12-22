@@ -28,7 +28,7 @@ fs.readdirSync(normalizedPath).forEach((file) => {
 client.login(BOT_TOKEN);
 
 client.on('ready', () => {
-  console.log('Bot is online. :)');
+  console.log('Bot is online. :-)');
 });
 
 
