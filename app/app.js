@@ -1,10 +1,13 @@
 require('dotenv').config();
+const m3u8stream = require('m3u8stream');
+const parseTime = require('m3u8stream/dist/parse-time');
+
 const Discord = require('discord.js');
 
 const client = new Discord.Client();
 const fs = require('fs');
 
-const { BOT_TOKEN } = process.env;
+const { BOT_TOKEN, MONGO_URL } = process.env;
 
 const prefix = '!';
 // This holds all the commands from the /command folder
@@ -14,13 +17,16 @@ const commands = [];
 const normalizedPath = require('path').join(__dirname, 'commands');
 
 fs.readdirSync(normalizedPath).forEach((file) => {
-  const { name, func, desc } = require(`./commands/${file}`);
+  const {
+    name, func, desc, abbr,
+  } = require(`./commands/${file}`);
   // Injecting the commands from the folder with all the information for the command
   const commandObject = {
     name,
     func,
     desc,
     command: `${prefix}${name.toLocaleLowerCase().replace(/\s/g, '')}`,
+    abbr: `${prefix}${abbr.toLocaleLowerCase().replace(/\s/g, '')}`,
   };
   commands.push(commandObject);
 });
@@ -33,7 +39,9 @@ client.on('ready', () => {
 
 
 client.on('message', async (msg) => {
-  if (msg.content.split('')[0] !== prefix) { return; } // Check for prefix
+  if (msg.author.bot) return; // ignore bots
+
+  if (msg.content.split('')[0] !== prefix) return; // Check for prefix
 
   const content = msg.content.toLocaleLowerCase();
 
@@ -52,9 +60,9 @@ client.on('message', async (msg) => {
     msg.reply(helpMessage);
     return;
   }
-
+  const invoked = content.split(' ')[0];
   // All the other commands
-  const c = commands.find(({ command }) => command === content.split(' ')[0]);
+  const c = commands.find(({ command, abbr }) => command === invoked || abbr === invoked);
 
   if (c) {
     c.func(msg, content, client);

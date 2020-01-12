@@ -1,5 +1,7 @@
 module.exports.name = 'Ping';
 
+module.exports.abbr = 'p';
+
 module.exports.desc = 'Ping the bot to see how fast it responds.';
 
 module.exports.func = async (msg, content, client) => {
