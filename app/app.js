@@ -1,13 +1,16 @@
 require('dotenv').config();
-const m3u8stream = require('m3u8stream');
-const parseTime = require('m3u8stream/dist/parse-time');
+
+const { BOT_TOKEN, MONGO_URL } = process.env;
 
 const Discord = require('discord.js');
 
 const client = new Discord.Client();
 const fs = require('fs');
 
-const { BOT_TOKEN, MONGO_URL } = process.env;
+// DB Connection
+const mongoose = require('mongoose');
+
+mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const prefix = '!';
 // This holds all the commands from the /command folder
