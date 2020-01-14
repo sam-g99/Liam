@@ -7,11 +7,17 @@ module.exports.abbr = 'cr';
 module.exports.desc = 'Create a command and add random responses';
 
 module.exports.func = async (msg, content, client) => {
-  const responses = [];
-  console.log(msg.guild.id);
+  // Make sure command exist
   const newCommand = content.split(' ')[1];
   if (!newCommand) {
     msg.reply('Please set a command `!createrandom {newcommand}`');
+    return;
+  }
+  // Check if command exist in this server already (TODO: and isn't a bto command already)
+  const commandExist = await RandomCommand.countDocuments({ serverId: msg.guild.id, command: newCommand });
+  console.log(commandExist);
+  if (commandExist > 0) {
+    msg.channel.send('**that command already exist here!**');
     return;
   }
   RandomCommand.create({ serverId: msg.guild.id, command: newCommand });
@@ -20,10 +26,8 @@ module.exports.func = async (msg, content, client) => {
 
   const filter = async (m, r) => {
     if (m.author.bot) return;
-    console.log(m.content, r);
     // TODO fix this thingie later
     const Command = await RandomCommand.findOne({ serverId: msg.guild.id, command: newCommand });
-    console.log(Command);
     Command.responses.push(m.content);
     Command.save();
 
