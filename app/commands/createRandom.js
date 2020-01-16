@@ -7,7 +7,10 @@ module.exports.abbr = 'cr';
 module.exports.desc = 'Create a command and add random responses';
 
 module.exports.func = async (data) => {
-  const { msg, content } = data;
+  const {
+    msg, content, commands, prefix,
+  } = data;
+  console.log(commands);
 
   const newCommand = content.split(' ')[1];
 
@@ -24,6 +27,14 @@ module.exports.func = async (data) => {
 
   if (commandExist > 0) {
     msg.channel.send('**that command already exist here!**');
+    return;
+  }
+
+  const newCommandWithPrefix = `${prefix}${newCommand}`;
+  const isStandardCommand = commands.some(({ command, abbr }) => command === newCommandWithPrefix || abbr === newCommandWithPrefix);
+  console.log(isStandardCommand);
+  if (isStandardCommand) {
+    msg.channel.send('**That command is already a part of this bot!**');
     return;
   }
 

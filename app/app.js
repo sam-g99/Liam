@@ -68,6 +68,7 @@ client.on('message', async (msg) => {
     content,
     client,
     commands,
+    prefix,
   };
 
   // the command the user used
