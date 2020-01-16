@@ -31,8 +31,8 @@ module.exports.func = async (data) => {
   }
 
   const newCommandWithPrefix = `${prefix}${newCommand}`;
+  // eslint-disable-next-line max-len
   const isStandardCommand = commands.some(({ command, abbr }) => command === newCommandWithPrefix || abbr === newCommandWithPrefix);
-
 
   if (isStandardCommand) {
     msg.channel.send('**That command is already a part of this bot!**');
@@ -64,7 +64,7 @@ module.exports.func = async (data) => {
   const response = msg.channel.createMessageCollector(filter, { time: 10000000 });
 
   response.on('collect', (m) => {
-    if (m.content === '!cancel') {
+    if (m.content === '!done') {
       response.stop();
     }
   });

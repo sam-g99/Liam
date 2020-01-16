@@ -80,6 +80,19 @@ client.on('message', async (msg) => {
   if (c) {
     c.func(data);
   } else {
-    console.log('command not found');
+    const RandomCommand = require('../database/models/randomCommand');
+
+    // Check if random command
+    const Command = await RandomCommand.findOne({
+      serverId: msg.guild.id,
+      command: invoked.replace(`${prefix}`, ''),
+    });
+
+    if (Command) {
+      const r = Command.responses[0];
+      msg.channel.send(r);
+    } else {
+      console.log('command not found');
+    }
   }
 });
