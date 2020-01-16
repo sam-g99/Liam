@@ -4,7 +4,8 @@ module.exports.abbr = 'cc';
 
 module.exports.desc = 'Create a channel';
 
-module.exports.func = async (msg, content, client /* rename bot */) => {
+module.exports.func = async (data) => {
+  const { content, msg } = data;
   const newChannelName = content.split(' ')[1]; // do a check to see if it is the right format if not add '-'
   const server = msg.guild;
   // Check all channels in discord exist

@@ -11,6 +11,7 @@
       "no-console": "off",
       "linebreak-style":"off",
       "import/no-dynamic-require": "off",
-      "global-require": "off"
+      "global-require": "off",
+      "consistent-return": "off"
     }
 }

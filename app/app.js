@@ -40,7 +40,6 @@ client.on('ready', () => {
   console.log('Bot is online. :-)');
 });
 
-
 client.on('message', async (msg) => {
   if (msg.author.bot) return; // ignore bots
 
@@ -63,12 +62,22 @@ client.on('message', async (msg) => {
     msg.reply(helpMessage);
     return;
   }
+
+  const data = {
+    msg,
+    content,
+    client,
+    commands,
+  };
+
+  // the command the user used
   const invoked = content.split(' ')[0];
+
   // All the other commands
   const c = commands.find(({ command, abbr }) => command === invoked || abbr === invoked);
 
   if (c) {
-    c.func(msg, content, client);
+    c.func(data);
   } else {
     console.log('command not found');
   }

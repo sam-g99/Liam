@@ -6,37 +6,51 @@ module.exports.abbr = 'cr';
 
 module.exports.desc = 'Create a command and add random responses';
 
-module.exports.func = async (msg, content, client) => {
-  // Make sure command exist
+module.exports.func = async (data) => {
+  const { msg, content } = data;
+
   const newCommand = content.split(' ')[1];
+
   if (!newCommand) {
     msg.reply('Please set a command `!createrandom {newcommand}`');
     return;
   }
-  // Check if command exist in this server already (TODO: and isn't a bto command already)
-  const commandExist = await RandomCommand.countDocuments({ serverId: msg.guild.id, command: newCommand });
-  console.log(commandExist);
+
+  // Check if command exist in this server already
+  const commandExist = await RandomCommand.countDocuments({
+    serverId: msg.guild.id,
+    command: newCommand,
+  });
+
   if (commandExist > 0) {
     msg.channel.send('**that command already exist here!**');
     return;
   }
+
+  // Create the command
   RandomCommand.create({ serverId: msg.guild.id, command: newCommand });
 
   msg.reply(`Please send the random items to bind to !${newCommand}.`);
 
+
   const filter = async (m, r) => {
     if (m.author.bot) return;
-    // TODO fix this thingie later
-    const Command = await RandomCommand.findOne({ serverId: msg.guild.id, command: newCommand });
-    Command.responses.push(m.content);
-    Command.save();
 
     if (m.content === '!cancel') {
       return true;
     }
+
+    const Command = await RandomCommand.findOne({
+      serverId: msg.guild.id,
+      command: newCommand,
+    });
+
+    Command.responses.push(m.content);
+    Command.save();
   };
 
-  const response = msg.channel.createMessageCollector(filter, { time: 10000000, maxMatches: 300 });
+  const response = msg.channel.createMessageCollector(filter, { time: 10000000 });
+
   response.on('collect', (m) => {
     if (m.content === '!cancel') {
       response.stop();
@@ -44,10 +58,8 @@ module.exports.func = async (msg, content, client) => {
   });
 
   response.on('end', (responses) => {
-    const courseData = responses.map((m) => m.content);
-    const authorId = responses.map((m) => m.author.id);
-    if (courseData.length < 3) {
-      msg.channel.send('**Cancelled**');
-    }
+    // const courseData = responses.map((m) => m.content);
+    // const authorId = responses.map((m) => m.author.id);
+    msg.channel.send('**Stopped collecting responses**');
   });
 };

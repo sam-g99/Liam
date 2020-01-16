@@ -17,7 +17,8 @@ module.exports.abbr = 'ym';
 
 module.exports.desc = 'Play audio from YouTube.';
 
-module.exports.func = async (msg, content, client) => {
+module.exports.func = async (data) => {
+  const { msg } = data;
   const url = msg.content.split(' ')[1].trim();
 
   const streamOptions = { seek: 0, volume: 1 };
