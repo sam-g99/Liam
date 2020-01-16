@@ -29,7 +29,7 @@ fs.readdirSync(normalizedPath).forEach((file) => {
     func,
     desc,
     command: `${prefix}${name.toLocaleLowerCase().replace(/\s/g, '')}`,
-    abbr: `${prefix}${abbr.toLocaleLowerCase().replace(/\s/g, '')}`,
+    abbr: (abbr) ? `${prefix}${abbr.toLocaleLowerCase().replace(/\s/g, '')}` : null,
   };
   commands.push(commandObject);
 });

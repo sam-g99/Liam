@@ -32,7 +32,8 @@ module.exports.func = async (data) => {
 
   const newCommandWithPrefix = `${prefix}${newCommand}`;
   const isStandardCommand = commands.some(({ command, abbr }) => command === newCommandWithPrefix || abbr === newCommandWithPrefix);
-  console.log(isStandardCommand);
+
+
   if (isStandardCommand) {
     msg.channel.send('**That command is already a part of this bot!**');
     return;
