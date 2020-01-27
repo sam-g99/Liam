@@ -15,7 +15,7 @@ module.exports.func = async (data) => {
   const newCommand = content.split(' ')[1];
 
   if (!newCommand) {
-    msg.reply('Please set a command `!createrandom {newcommand}`');
+    msg.reply(`Please set a command \`${prefix}createrandom {newcommand}\``);
     return;
   }
 
@@ -47,8 +47,7 @@ module.exports.func = async (data) => {
 
   const filter = async (m, r) => {
     if (m.author.bot) return;
-
-    if (m.content === '!cancel') {
+    if (m.content === `${prefix}done`) {
       return true;
     }
 
@@ -58,13 +57,15 @@ module.exports.func = async (data) => {
     });
 
     Command.responses.push(m.content);
-    Command.save();
+    Command.save().then(() => {
+      msg.channel.send('`added`');
+    });
   };
 
   const response = msg.channel.createMessageCollector(filter, { time: 10000000 });
 
   response.on('collect', (m) => {
-    if (m.content === '!done') {
+    if (m.content === `${prefix}done`) {
       response.stop();
     }
   });
@@ -72,6 +73,6 @@ module.exports.func = async (data) => {
   response.on('end', (responses) => {
     // const courseData = responses.map((m) => m.content);
     // const authorId = responses.map((m) => m.author.id);
-    msg.channel.send('**Stopped collecting responses**');
+    msg.channel.send(`**Done collecting responses for \`${newCommand}\`**`);
   });
 };
